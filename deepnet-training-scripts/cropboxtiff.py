@@ -3,7 +3,10 @@
 from PIL import Image
 import os,sys
 
+charDict = {}
+
 count = 0
+charCount = -1
 for root, dirs, files in os.walk(sys.argv[1]):
     path = root.split('/')
     for file in files:
@@ -17,8 +20,11 @@ for root, dirs, files in os.walk(sys.argv[1]):
                 charwidth = int(linearray[3]) - int(linearray[1])
                 charheight = int(linearray[4]) - int(linearray[2])
                 (tl1,tl2,br1,br2) = (int(linearray[1]), height - (int(linearray[2]) + charheight) , int(linearray[3]), height - (int(linearray[4]) - charheight))
-                if linearray[0] == 'l':
-                    character = img.crop((tl1,tl2,br1,br2))
-                    character.save(sys.argv[2]+'/'+linearray[0]+'_'+str(count)+'.jpg')
-                
+                if not charDict.has_key(linearray[0]):
+                    charCount += 1
+                    charDict[linearray[0]] = charCount
+                character = img.crop((tl1,tl2,br1,br2))
+                character.save(sys.argv[2]+'/'+str(count)+'.jpg')
+                print sys.argv[2]+'/'+str(count)+'.jpg',
+                print charDict[linearray[0]]
 
